@@ -33,7 +33,7 @@ var message_form = '<div class="input-group">' +
 var del_form = '<div class="input-group">' +
   '<span class="input-group-addon" id="msg_guid_field">Required</span>' +
   '<input type="text" class="form-control" name="msg_guid" id="msg_guid" placeholder="Message GUID" aria-describedby="sender_id_field">' +
-'</div>' + 
+'</div>' +
 '<div class="input-group">' +
   '<span class="input-group-addon" id="manage_key_field">Required</span>' +
   '<input type="text" class="form-control" name="manage_key" id="manage_key" placeholder="Management Key" aria-describedby="sender_id_field">' +
@@ -105,11 +105,10 @@ function process_delete(){
 
   $.post('/api/v1/delete/' + $('#msg_guid').val(),
     postdata)
-    .done(function() {
-      window.open('https://www.youtube.com/watch?v=fkXGGhuQs0o&t=50');
-    })
+    .done(del_success)
     .fail(function() {
     });
+    return false;
 }
 
 // http://stackoverflow.com/a/19691491
@@ -132,13 +131,13 @@ function send_secret_message() {
   var expiryDate = addDays(new Date(), parseInt(days_until_expiry));
 
   var post_content = {
-            "sender_reply_address": sender_reply_address, 
-            "secret": {"expiry_type": 1, 
+            "sender_reply_address": sender_reply_address,
+            "secret": {"expiry_type": 1,
                       "expiry_timestamp": expiryDate,
                       "content": message_content },
-            "recipient": {"id": recipient_id, 
-                        "email": recipient_email}, 
-            "content_delivery_channel": 1, 
+            "recipient": {"id": recipient_id,
+                        "email": recipient_email},
+            "content_delivery_channel": 1,
             "sender_id": sender_id,
             "key_delivery_channel": key_delivery_channel
             };
@@ -168,6 +167,13 @@ function post_success(data){
   $('.modal-body').html('<p class="message_success">Your message has been sent.</p><p class="message_success">Please keep the following info to manage this later:</p><ul class="message_success"><li>GUID: ' + data.uid + '</li><li>Management Key: ' + data.management_key + '</li></ul>');
 }
 
+function del_success(data){
+  $('h4.modal-title').html('Message Deleted!');
+  $('.btn-success').show();
+  $('.btn-danger').hide();
+  $('.modal-body').html('<p class="message_success">Your message has been deleted</p>');
+}
+
 $(document).on('change', '#key_delivery_channel', function(e){
   var channel = $('#key_delivery_channel').val();
   if (channel == 1) {
@@ -176,25 +182,3 @@ $(document).on('change', '#key_delivery_channel', function(e){
     $('#sms_field_div').show();
   }
 });
-      /*
-      posts:
-        add: {
-          url: api/v1/create
-          post: 
-            {
-            "sender_reply_address": "phil@phil.com", 
-            "secret": {"expiry_type": 1, 
-                      "expiry_timestamp": '2015-08-08',
-                      "content": "hello world"}, 
-            "recipient": {"phone": 18001231234, 
-                        "id": "eric", 
-                        "email": "eric@lan.com"}, 
-            "content_delivery_channel": 2, 
-            "sender_id": "philip", 
-            "key_delivery_channel": 2
-            }
-          receive:
-            {uid: '',
-            management_key: ''}
-          
-      */
