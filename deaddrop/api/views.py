@@ -41,10 +41,7 @@ class SecretCreate(APIView):
                                     expiry_type=serializer.data['secret']['expiry_type'],
                                     expiry_timestamp=serializer.data['secret'].get('expiry_timestamp', None),
                                     management_key=generate_uid())
-            # FOR DEBUGGING
-            # print(key)
-            # print(secret.uid)
-            # secret.save()
+
             # content send logic
             if serializer.data['content_delivery_channel'] == models.EMAIL_CHANNEL:  # sendgrid
                 try:
@@ -108,10 +105,9 @@ class SecretDecrypt(APIView):
                 raise Http404
         serializer = serializers.DecryptRequestSerializer(data=request.data)
         if serializer.is_valid():
-            to_decrypt = bytes(requested_secret.content, "utf-8")
             key = serializer.data['key']
             try:
-                decrypted_content = encryptor.decrypt_secret(to_decrypt, key)
+                decrypted_content = encryptor.decrypt_secret(requested_secret.content, key)
             except Exception as e:
                 print(e)
                 result = {"result": None, "error": "Error decrypting content"}

@@ -20,6 +20,7 @@ def encrypt_secret(secret):
     cipher = AES.new(key)
     garble = base64.b64encode(cipher.encrypt(__pad(secret)))
     key = str(base64.b64encode(key), "utf-8")
+    garble = str(garble, "utf-8")
     return (garble, key)
 
 
