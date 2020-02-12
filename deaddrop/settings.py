@@ -30,7 +30,7 @@ else:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     DEBUG = False
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,127.0.0.1:8000,localhost:8000').split(',')
 
 ADMINS = (
     ('Eric Lan', 'elan@twilio.com'),
@@ -88,7 +88,18 @@ WSGI_APPLICATION = 'deaddrop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {'default': dj_database_url.config()}
+# DATABASES = {'default': dj_database_url.config()}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'deaddrop_test.db',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -228,7 +239,7 @@ if len(sys.argv) > 1 and 'test' in sys.argv[1]:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': '/tmp/deaddrop_test.db',
+            'NAME': 'deaddrop_test.db',
             'USER': '',
             'PASSWORD': '',
             'HOST': '',

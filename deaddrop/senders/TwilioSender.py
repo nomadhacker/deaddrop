@@ -1,9 +1,9 @@
-from twilio.rest import TwilioRestClient 
+from twilio.rest import Client
 from django.conf import settings
 
-def send(sender, recipient, content, type): 
-	client = TwilioRestClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN) 
-	body = "" 
+def send(sender, recipient, content, type):
+	client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN) 
+	body = ""
 	if type == 1:
 		body = "Secret message from %s: %s" % (sender, content)
 	elif type == 2:
@@ -11,7 +11,7 @@ def send(sender, recipient, content, type):
 	else:
 		body = "A secret from %s: %s" % (sender, content)
 	client.messages.create(
-		to= recipient, 
-		from_= settings.TWILIO_FROM_NUMBER, 
+		to= recipient,
+		from_= settings.TWILIO_FROM_NUMBER,
 		body= body
 	)

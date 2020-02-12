@@ -11,7 +11,7 @@ from deaddrop.encryption import aesencryptor as encryptor
 import uuid
 from datetime import datetime, timezone
 
-generage_uid = lambda: str(uuid.uuid1()).replace("-", "")
+generate_uid = lambda: str(uuid.uuid1()).replace("-", "")
 
 
 class SecretCreate(APIView):
@@ -37,10 +37,10 @@ class SecretCreate(APIView):
                     return Response("An phone number must be provided", status=status.HTTP_400_BAD_REQUEST)
 
             secret = models.Secret(content=encrypted_content,
-                                    uid=generage_uid(),
+                                    uid=generate_uid(),
                                     expiry_type=serializer.data['secret']['expiry_type'],
                                     expiry_timestamp=serializer.data['secret'].get('expiry_timestamp', None),
-                                    management_key=generage_uid())
+                                    management_key=generate_uid())
             # FOR DEBUGGING
             # print(key)
             # print(secret.uid)
