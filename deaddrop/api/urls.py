@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 from rest_framework import routers, views, reverse, response
 from .views import SecretCreate, SecretDecrypt, SecretDelete
 
@@ -26,7 +26,7 @@ class HybridRouter(routers.DefaultRouter):
             urls.append(self._api_view_urls[api_view_key])
         return urls
 
-    def get_api_root_view(self):
+    def get_api_root_view(self, api_urls):
         # Copy the following block from Default Router
         api_root_dict = {}
         list_name = self.routes[0].name

@@ -2,6 +2,7 @@ import sys, os
 import dj_database_url
 
 
+
 # PATH vars
 
 here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
@@ -29,9 +30,7 @@ else:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     DEBUG = False
 
-TEMPLATE_DEBUG = DEBUG
-
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 ADMINS = (
     ('Eric Lan', 'elan@twilio.com'),
@@ -69,21 +68,17 @@ LIBRARY_APPS = (
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + LIBRARY_APPS
 
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
 
-if os.getenv("ENVIRONMENT", "") == "dev":
-    MIDDLEWARE_CLASSES += (
-        # 'deaddrop.web.middleware.LogRequests',
-        # 'deaddrop.web.middleware.ReadOnly'
-    )
+
 
 ROOT_URLCONF = 'deaddrop.urls'
 
@@ -125,9 +120,30 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = root('deaddrop/staticfiles/')
 
-TEMPLATE_DIRS = (
-    root('templates'),
-)
+
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            root('templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 # AUTH_USER_MODEL = 'authtools.User'
 
